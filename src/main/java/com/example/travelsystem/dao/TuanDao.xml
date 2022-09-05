@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace是命名空间 -->
+<mapper namespace="com.example.travelsystem.dao.TuanDao">
+	<resultMap type="com.example.travelsystem.entity.Tuan" id="TuanMap"  autoMapping="true">
+		<id column="id" property="id"/>
+		<result column="pic" property="pic"/>
+		<result column="content" property="content"/>
+
+		<association property="user" column="uid" select="com.example.travelsystem.dao.UserDao.getById"/>
+		<collection property="tuanxis" column="id" select="com.example.travelsystem.dao.TuanxiDao.getBytuan"/>
+	</resultMap>
+	<!-- id是唯一的 -->
+	<select id="getById" resultMap="TuanMap" parameterType="int">
+	select * from tuan where id=#{id} 
+	</select>
+	
+	<select id="getList" resultMap="TuanMap" parameterType="map">
+		select * from tuan where isdel=0
+		<if test="name!=null and name!=''">
+		  and name like concat("%",#{name},"%")
+		</if>
+		limit #{begin},#{pageSize} 
+	</select>
+	<insert id="add" parameterType="Tuan">
+		insert into tuan values(null,#{uid},#{name},#{nums},0,#{content},#{pic},#{time},0)
+	</insert>
+	<update id="modify" parameterType="Tuan">
+		update tuan 
+		<set>
+			<if test="name!=null and name!=''"> name=#{name}, </if>
+			<if test="nums!=null"> nums=#{nums}, </if>
+			<if test="cnums!=null"> cnums=#{cnums}, </if>
+			<if test="pic!=null and pic!=''"> pic=#{pic}, </if>
+			<if test="content!=null and content!=''"> content=#{content}, </if>
+			<if test="time!=null and time!=''"> time=#{time}, </if>
+		</set>
+		where id = #{id} 
+	</update>
+	<update id="deleteById" parameterType="int">
+		update tuan set isdel=1 where id=#{delId}
+	</update>
+	<select id="getCount" resultType="int" parameterType="map">
+	select count(1) as count from tuan where isdel=0
+		<if test="name!=null and name!=''">
+		  and name like concat("%",#{name},"%")
+		</if>
+	</select>
+</mapper>
+
+
+

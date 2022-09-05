@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace是命名空间 -->
+<mapper namespace="com.example.travelsystem.dao.RecreationDao">
+    <!-- id是唯一的 -->
+    <select id="getById" resultType="Recreation" parameterType="int">
+        select * from recreation where id=#{id}
+    </select>
+
+    <select id="getList" resultType="Recreation" parameterType="map">
+        select * from recreation where isdel=0
+        <if test="name!=null and name!=''">
+            and name like concat("%",#{name},"%")
+        </if>
+        limit #{begin},#{pageSize}
+    </select>
+    <insert id="add" parameterType="Recreation">
+        insert into recreation values(null,#{intro},#{name},#{img1},#{img2},#{img3},0)
+    </insert>
+    <update id="modify" parameterType="Recreation">
+        update recreation
+        <set>
+            <if test="intro!=null and intro!=''">intro=#{intro},</if>
+            <if test="name!=null and name!=''">name=#{name},</if>
+        </set>
+        where id = #{id}
+    </update>
+    <update id="deleteById" parameterType="int">
+        update recreation set isdel=1 where id=#{delId}
+    </update>
+    <select id="getCount" resultType="int" parameterType="map">
+        select count(1) as count from recreation where isdel=0
+        <if test="name!=null and name!=''">
+            and name like concat("%",#{name},"%")
+        </if>
+    </select>
+</mapper>
+
+
+

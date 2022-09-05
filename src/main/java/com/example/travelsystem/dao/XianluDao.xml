@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace是命名空间 -->
+<mapper namespace="com.example.travelsystem.dao.XianluDao">
+    <!-- id是唯一的 -->
+    <select id="getById" resultType="Xianlu" parameterType="int">
+        select * from xianlu where id=#{id}
+    </select>
+
+    <select id="getList" resultType="Xianlu" parameterType="map">
+        select * from xianlu where 1=1
+        <if test="name!=null and name!=''">
+            and name like concat("%",#{name},"%")
+        </if>
+        <if test="begin!=-1">
+            limit #{begin},#{pageSize}
+        </if>
+    </select>
+    <insert id="add" parameterType="Xianlu">
+        insert into xianlu values(null,#{intro},#{name},#{price},#{tnum},#{img1})
+    </insert>
+    <update id="modify" parameterType="Xianlu">
+        update xianlu
+        <set>
+            <if test="price>0">price=#{price},</if>
+            <if test="tnum!=null">tnum=#{tnum},</if>
+            <if test="intro!=null and intro!=''">intro=#{intro},</if>
+            <if test="name!=null and name!=''">name=#{name},</if>
+        </set>
+        where id = #{id}
+    </update>
+    <delete id="deleteById" parameterType="int">
+        delete from xianlu where id=#{delId}
+    </delete>
+    <select id="getCount" resultType="int" parameterType="map">
+        select count(1) as count from xianlu where 1=1
+        <if test="name!=null and name!=''">
+            and name like concat("%",#{name},"%")
+        </if>
+    </select>
+</mapper>
+
+
+

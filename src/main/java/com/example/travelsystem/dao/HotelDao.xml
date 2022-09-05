@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace是命名空间 -->
+<mapper namespace="com.example.travelsystem.dao.HotelDao">
+    <!-- id是唯一的 -->
+    <select id="getById" resultType="Hotel" parameterType="int">
+        select * from hotel where id=#{id}
+    </select>
+
+    <select id="getList" resultType="Hotel" parameterType="map">
+        select * from hotel where isdel=0
+        <if test="name!=null and name!=''">
+            and name like concat("%",#{name},"%")
+        </if>
+        limit #{begin},#{pageSize}
+    </select>
+    <insert id="add" parameterType="Hotel">
+        insert into hotel values(null,#{intro},#{name},#{img1},#{img2},#{img3},0,#{address},#{coordinate},#{price})
+    </insert>
+    <update id="modify" parameterType="Hotel">
+        update hotel
+        <set>
+            <if test="intro!=null and intro!=''">intro=#{intro},</if>
+            <if test="name!=null and name!=''">name=#{name},</if>
+            <if test="address!=null and address!=''">address=#{address},</if>
+            <if test="price!=null">price=#{price},</if>
+            <if test="coordinate!=null and coordinate!=''">coordinate=#{coordinate},</if>
+        </set>
+        where id = #{id}
+    </update>
+    <update id="deleteById" parameterType="int">
+        update hotel set isdel=1 where id=#{delId}
+    </update>
+    <select id="getCount" resultType="int" parameterType="map">
+        select count(1) as count from hotel where isdel=0
+        <if test="name!=null and name!=''">
+            and name like concat("%",#{name},"%")
+        </if>
+    </select>
+</mapper>
+
+
+

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace是命名空间 -->
+<mapper namespace="com.example.travelsystem.dao.BuyticketDao">
+    <!-- id是唯一的 -->
+    <select id="getById" resultType="Buyticket" parameterType="int">
+        select b.*,u.name as uname from buyticket b,user u where b.uid=u.id and b.id=#{id}
+    </select>
+
+    <select id="getList" resultType="Buyticket" parameterType="map">
+        select b.*,u.name as uname from buyticket b,user u where b.uid=u.id
+        <if test="uid != -1 and uid !=null">
+            and b.uid = #{uid}
+        </if>
+        <if test="fenlei != '' and fenlei != null">
+            and b.fenlei = #{fenlei}
+        </if>
+        order by id desc
+        <if test="begin != -1">
+            limit #{begin},#{pageSize}
+        </if>
+    </select>
+    <insert id="add" parameterType="Buyticket">
+        insert into buyticket values(null,#{uid},#{sid},#{num},#{price},0,#{fenlei},#{sdate})
+    </insert>
+    <update id="modify" parameterType="Buyticket">
+        update buyticket
+        <set>
+            <if test="check!=-1">`check`=#{check},</if>
+        </set>
+        where id = #{id}
+    </update>
+    <delete id="deleteById" parameterType="int">
+        delete from buyticket where id=#{delId}
+    </delete>
+    <select id="getCount" resultType="int" parameterType="map">
+        select count(1) as count from buyticket where 1=1
+        <if test="fenlei != '' and fenlei != null">
+            and fenlei = #{fenlei}
+        </if>
+        <if test="check != -1 and check!= null">
+            and `check` = #{check}
+        </if>
+
+    </select>
+
+    <select id="getTodayTicket" resultType="int">
+        select sum(num) as snum from buyticket where `check`=1 and fenlei='景点' and to_days(sdate) = to_days(now());
+    </select>
+
+    <select id="getTickets" resultType="map">
+        select sum(num) as snum,sid from buyticket where `check`=1 and fenlei='景点'
+        <if test="starttime!=null and starttime!=''">
+            and sdate>#{starttime}
+        </if>
+        <if test="endtime!=null and endtime!=''">
+            <![CDATA[and sdate<#{endtime}]]>
+        </if>
+        group by sid
+    </select>
+
+
+</mapper>
+
+
+

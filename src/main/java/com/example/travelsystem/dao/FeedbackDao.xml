@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace是命名空间 -->
+<mapper namespace="com.example.travelsystem.dao.FeedbackDao">
+    <resultMap type="com.example.travelsystem.entity.Feedback" id="FeedbackMap" autoMapping="true">
+        <id column="id" property="id"/>
+        <result column="fback" property="fback"/>
+        <result column="ftime" property="ftime"/>
+        <result column="pid" property="pid"/>
+        <association property="user" column="userid" select="com.example.travelsystem.dao.UserDao.getById"/>
+    </resultMap>
+    <select id="getByPricture" resultMap="FeedbackMap" parameterType="int">
+        select * from feedback where pid=#{pid}
+    </select>
+    <!-- id是唯一的 -->
+    <select id="getById" resultMap="FeedbackMap" parameterType="int">
+        select * from feedback where id=#{id}
+    </select>
+    <select id="getList" resultMap="FeedbackMap" parameterType="map">
+        select * from feedback f limit #{begin},#{pageSize}
+    </select>
+    <insert id="add" parameterType="Feedback">
+        insert into feedback values(null,#{fback},#{pid},#{uid},now())
+    </insert>
+    <delete id="deleteById" parameterType="int">
+        delete from feedback where id=#{delId}
+    </delete>
+    <select id="getCount" resultType="int">
+        select count(1) as count from feedback
+    </select>
+</mapper>
+
+
+

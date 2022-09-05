@@ -1,0 +1,27 @@
+server:
+  port: 9898
+  servlet:
+    jsp:
+      init-parameters:
+        development: true
+
+
+spring:
+  mvc:
+    view:
+      prefix: /
+      suffix: .jsp
+  datasource:
+    url: jdbc:mysql://localhost:3306/db_travel?createDatabaseIfNotExist=TRUE&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: root
+
+
+mybatis-plus:
+  mapper-locations: classpath:com/example/travelsystem/dao/*.xml
+  type-aliases-package: com.example.travelsystem.entity
+  global-config:
+    db-config:
+      id-type: auto
+

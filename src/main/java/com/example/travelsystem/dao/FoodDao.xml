@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace是命名空间 -->
+<mapper namespace="com.example.travelsystem.dao.FoodDao">
+    <!-- id是唯一的 -->
+    <select id="getById" resultType="Food" parameterType="int">
+        select * from food where id=#{id}
+    </select>
+
+    <select id="getList" resultType="Food" parameterType="map">
+        select * from food where isdel=0
+        <if test="name!=null and name!=''">
+            and name like concat("%",#{name},"%")
+        </if>
+        limit #{begin},#{pageSize}
+    </select>
+    <insert id="add" parameterType="Food">
+        insert into food values(null,#{intro},#{name},#{img1},#{img2},#{img3},0,#{address},#{coordinate},#{price})
+    </insert>
+    <update id="modify" parameterType="Food">
+        update food
+        <set>
+            <if test="intro!=null and intro!=''">intro=#{intro},</if>
+            <if test="name!=null and name!=''">name=#{name},</if>
+            <if test="address!=null and address!=''">address=#{address},</if>
+            <if test="price!=null">price=#{price},</if>
+            <if test="coordinate!=null and coordinate!=''">coordinate=#{coordinate},</if>
+        </set>
+        where id = #{id}
+    </update>
+    <update id="deleteById" parameterType="int">
+        update food set isdel=1 where id=#{delId}
+    </update>
+    <select id="getCount" resultType="int" parameterType="map">
+        select count(1) as count from food where isdel=0
+        <if test="name!=null and name!=''">
+            and name like concat("%",#{name},"%")
+        </if>
+    </select>
+</mapper>
+
+
+

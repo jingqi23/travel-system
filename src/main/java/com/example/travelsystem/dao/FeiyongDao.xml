@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace是命名空间 -->
+<mapper namespace="com.example.travelsystem.dao.FeiyongDao">
+    <!-- id是唯一的 -->
+    <select id="getById" resultType="Feiyong" parameterType="int">
+        select * from feiyong where id=#{id}
+    </select>
+
+    <select id="getList" resultType="Feiyong" parameterType="map">
+        select * from feiyong where uid=#{uid}
+    </select>
+
+    <select id="getAll" resultType="double">
+        select ifnull(sum(feiyong),0) from feiyong where uid=#{uid}
+    </select>
+    <insert id="add" parameterType="Feiyong">
+        insert into feiyong values(null,#{uid},#{feiyong},now(),#{content})
+    </insert>
+    <update id="modify" parameterType="Feiyong">
+        update feiyong
+        <set>
+            <if test="feiyong>0">feiyong=#{feiyong},</if>
+            <if test="content!=null and content!=''">content=#{content},</if>
+        </set>
+        where id = #{id}
+    </update>
+    <delete id="deleteById" parameterType="int">
+        delete from feiyong where id=#{delId}
+    </delete>
+
+</mapper>
+
+
+

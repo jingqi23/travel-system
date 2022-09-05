@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace是命名空间 -->
+<mapper namespace="com.example.travelsystem.dao.UserDao">
+
+    <select id="getLoginUser" resultType="User" parameterType="String">
+        select * from user where username=#{userid} and isdel=0
+    </select>
+    <select id="getList" resultType="User" parameterType="map">
+        select * from user where isdel=0
+
+        <if test="username!=null and username!=''">
+            and username like concat("%",#{username},"%")
+        </if>
+        <if test="role!=null and role!=-1">
+            and role = #{role}
+        </if>
+        limit #{begin},#{pageSize}
+    </select>
+    <insert id="add" parameterType="User">
+        insert into user values(null,#{username},#{password},#{role},#{name},#{sex},#{phone},#{idcard},0)
+    </insert>
+    <update id="modify" parameterType="User">
+        update user
+        <set>
+            <if test="username!=null and username!=''">username=#{username},</if>
+            <if test="idcard!=null and idcard!=''">idcard=#{idcard},</if>
+            <if test="phone!=null and phone!=''">phone=#{phone},</if>
+            <if test="password!=null and password!=''">password=#{password},</if>
+            <if test="sex > -1">sex=#{sex},</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <select id="getCount" resultType="int" parameterType="map">
+        select count(1) as count from user where isdel=0
+        <if test="username!=null and username!=''">
+            and username like concat("%",#{username},"%")
+        </if>
+        <if test="role!=null and role!=-1">
+            and role = #{role}
+        </if>
+    </select>
+</mapper>
+
+
+

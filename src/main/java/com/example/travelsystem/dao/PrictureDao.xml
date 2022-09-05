@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace是命名空间 -->
+<mapper namespace="com.example.travelsystem.dao.PrictureDao">
+    <resultMap type="com.example.travelsystem.entity.Pricture" id="PrictureMap" autoMapping="true">
+        <id column="id" property="id"/>
+        <result column="img" property="img"/>
+        <result column="describe" property="describe"/>
+        <result column="title" property="title"/>
+        <association property="user" column="userid" select="com.example.travelsystem.dao.UserDao.getById"/>
+        <collection property="feedbacks" column="id" select="com.example.travelsystem.dao.FeedbackDao.getByPricture"/>
+    </resultMap>
+    <!-- id是唯一的 -->
+    <select id="getById" resultMap="PrictureMap" parameterType="int">
+        select * from pricture p where p.id=#{id}
+    </select>
+
+    <select id="getList" resultType="Pricture" parameterType="map">
+        select * from pricture p limit #{begin},#{pageSize}
+    </select>
+    <insert id="add" parameterType="Pricture">
+        insert into pricture values(null,#{title},#{uid},#{img},#{describe})
+    </insert>
+    <update id="modify" parameterType="Pricture">
+        update pricture
+        <set>
+            <if test="title!=null and title!=''">title=#{title},</if>
+            <if test="describe!=null and describe!=''">describe=#{describe},</if>
+        </set>
+        where id = #{id}
+    </update>
+    <delete id="deleteById" parameterType="int">
+        delete from pricture where id=#{delId}
+    </delete>
+    <select id="getCount" resultType="int" parameterType="map">
+        select count(1) as count from pricture
+    </select>
+</mapper>
+
+
+

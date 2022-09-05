@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+               http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+               http://www.springframework.org/schema/context
+               http://www.springframework.org/schema/context/spring-context-4.0.xsd
+
+
+
+
+               http://www.springframework.org/schema/mvc
+               http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
+    <import resource="classpath:applicationContext.xml"/>
+    <!-- 开启注解 -->
+    <context:component-scan base-package="cn"/>
+
+    <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/"/>
+        <property name="suffix" value=".jsp"/>
+    </bean>
+    <mvc:resources location="/css/" mapping="/css/**"/>
+    <mvc:default-servlet-handler/>
+    <!-- 配置一个文件解析器 -->
+    <bean class="org.springframework.web.multipart.commons.CommonsMultipartResolver" id="multipartResolver">
+        <property name="maxUploadSize" value="1024000"/>
+        <property name="defaultEncoding" value="UTF-8"/>
+    </bean>
+    <!--配置一个json格式的转换器  -->
+    <bean class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter" id="fastJsonHttpMessageConverter">
+        <property name="supportedMediaTypes" value="application/json;charset=UTF-8"/>
+    </bean>
+    <!--自动配置HandlerMapping和HandlerAdapter -->
+    <mvc:annotation-driven conversion-service="conversionService">
+        <mvc:message-converters>
+            <ref bean="fastJsonHttpMessageConverter"/>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+    <!-- 配置转换器 -->
+    <bean class="org.springframework.format.support.FormattingConversionServiceFactoryBean" id="conversionService">
+        <property name="converters">
+            <list>
+                <bean class="com.example.travelsystem.tools.DateConverter"/>
+            </list>
+        </property>
+    </bean>
+
+    <!-- 配置一个拦截器-->
+    <!--<mvc:interceptors>
+        <mvc:interceptor>
+                <mvc:mapping path="/*/*"/>
+                <mvc:mapping path="/userold/query"/>
+                <mvc:exclude-mapping path="/userold/login"/>
+                <mvc:exclude-mapping path="/*/query"/>
+                <mvc:exclude-mapping path="/userold/add"/>
+                <bean class="com.example.travelsystem.tools.LoginInterceptor"/>
+            </mvc:interceptor>
+        </mvc:interceptors>
+
+    -->
+</beans>

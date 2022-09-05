@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace是命名空间 -->
+<mapper namespace="com.example.travelsystem.dao.TuanxiDao">
+	<resultMap type="com.example.travelsystem.entity.Tuanxi" id="TuanxiMap"  autoMapping="true">
+		<id column="id" property="id"/>
+		<result column="tid" property="tid"/>
+		<association property="user" column="uid" select="com.example.travelsystem.dao.UserDao.getById"/>
+	</resultMap>
+	
+	<insert id="add" parameterType="Tuan">
+		insert into tuanxi values(null,#{tid},#{uid})
+	</insert>
+	
+	<select id="getBytuan" resultMap="TuanxiMap" parameterType="int">
+		select * from tuanxi where tid=#{tid}
+	</select>
+	<select id="getCount" resultType="int" parameterType="map">
+		select count(*) from tuanxi where tid=#{tid} and uid=#{uid}
+	</select>
+</mapper>
+
+
+
